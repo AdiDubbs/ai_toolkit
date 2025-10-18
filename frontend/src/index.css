@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: hsl(280 15% 85%);
+  background: linear-gradient(135deg, #2980b9, #2c3e50);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: hsl(280 30% 60%); /* pastel purple */
+  text-decoration: inherit;
+}
+a:hover {
+  color: hsl(200 30% 60%); /* pastel blue */
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: hsl(320 30% 70%); /* pastel pink accent */
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: hsl(280 30% 60%); /* pastel purple */
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: hsl(280 15% 85%);
+    background: linear-gradient(135deg, #2980b9, #2c3e50);
+  }
+  a:hover {
+    color: hsl(200 40% 70%); /* brighter pastel blue */
+  }
+  button {
+    background-color: hsl(320 40% 75%); /* brighter pastel pink */
+  }
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%; /* white */
+    --foreground: 280 15% 85%; /* light purple-gray for dark background */
+    --card: 0 0% 100%; /* white */
+    --card-foreground: 280 15% 85%;
+    --popover: 0 0% 100%; /* white */
+    --popover-foreground: 280 15% 85%;
+    --primary: 280 30% 60%; /* pastel purple */
+    --primary-foreground: 0 0% 100%; /* white */
+    --secondary: 200 30% 60%; /* pastel blue */
+    --secondary-foreground: 0 0% 100%; /* white */
+    --muted: 280 15% 90%; /* very light purple-gray */
+    --muted-foreground: 280 15% 50%;
+    --accent: 320 30% 70%; /* pastel pink */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 280 20% 85%; /* light purple border */
+    --input: 280 20% 85%;
+    --ring: 280 30% 60%; /* primary */
+    --radius: 0.75rem;
+  }
+  .dark {
+    --background: 280 20% 8%; /* dark purple-gray */
+    --foreground: 280 15% 85%; /* light purple-gray */
+    --card: 280 20% 12%; /* dark purple card */
+    --card-foreground: 280 15% 85%;
+    --popover: 280 20% 12%;
+    --popover-foreground: 280 15% 85%;
+    --primary: 280 40% 70%; /* brighter pastel purple */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 200 40% 70%; /* brighter pastel blue */
+    --secondary-foreground: 0 0% 100%;
+    --muted: 280 15% 20%;
+    --muted-foreground: 280 15% 65%;
+    --accent: 320 40% 75%; /* brighter pastel pink */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 280 20% 25%;
+    --input: 280 20% 25%;
+    --ring: 280 40% 70%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-gradient-custom text-foreground;
+  }
+}
+
+@layer utilities {
+  .bg-gradient-custom {
+    background: linear-gradient(135deg, #2980b9 0%, #2c3e50 100%),
+      radial-gradient(
+        ellipse 800px 600px at 20% 30%,
+        rgba(255, 255, 255, 0.15),
+        transparent
+      ),
+      radial-gradient(
+        ellipse 600px 800px at 80% 70%,
+        rgba(255, 255, 255, 0.1),
+        transparent
+      ),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.028'/%3E%3C/svg%3E");
+    background-size: 100%, 100%, 100%, 100%;
+    background-blend-mode: overlay;
+  }
+}
