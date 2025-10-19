@@ -72,15 +72,28 @@ const Caption: React.FC = () => {
     if (!file) return;
     setIsGenerating(true);
     setCaption("");
-    // Simulate generation latency. Replace with real API call later.
-    await new Promise((r) => setTimeout(r, 1200));
-    const base = file.name.replace(/\.[^.]+$/, "").replace(/[-_]/g, " ");
-    const placeholder =
-      base && base.length > 1
-        ? `A photo likely related to “${base.trim()}”.`
-        : "A descriptive caption for the uploaded image.";
-    setCaption(placeholder);
-    setIsGenerating(false);
+    setError("");
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/caption", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to generate caption.");
+      }
+
+      const data = await response.json();
+      setCaption(data.caption);
+    } catch (error) {
+      setError("An error occurred while generating the caption.");
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   React.useEffect(() => {
