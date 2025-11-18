@@ -11,19 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Sparkles } from "lucide-react";
 
 const MAX_CHAR_COUNT = 2000;
-
-const summarizeText = (text: string) => {
-  const clean = text.replace(/\s+/g, " ").trim();
-  if (!clean) return "";
-
-  const sentences = clean.match(/[^.!?]+[.!?]?/g) ?? [clean];
-  if (sentences.length <= 2) {
-    return sentences.join(" ").trim();
-  }
-
-  const focusSentences = sentences.slice(0, 3).map((sentence) => sentence.trim());
-  return focusSentences.join(" ");
-};
+const SUMMARY_ENDPOINT = "http://127.0.0.1:8000/summarize";
 
 const Summarize: React.FC = () => {
   const [input, setInput] = React.useState("");
@@ -42,9 +30,33 @@ const Summarize: React.FC = () => {
     setIsSummarizing(true);
     setSummary("");
 
-    await new Promise((resolve) => setTimeout(resolve, 900));
-    setSummary(summarizeText(input));
-    setIsSummarizing(false);
+    const formData = new FormData();
+    const textBlob = new Blob([input], { type: "text/plain" });
+    formData.append("file", textBlob, "input.txt");
+
+    try {
+      const response = await fetch(SUMMARY_ENDPOINT, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to generate summary.");
+      }
+
+      const data = await response.json();
+      const summaryText = (data.summary as string | undefined)?.trim() ?? "";
+
+      if (!summaryText) {
+        setError("The summarization service returned an empty response.");
+      }
+
+      setSummary(summaryText);
+    } catch {
+      setError("An error occurred while generating the summary.");
+    } finally {
+      setIsSummarizing(false);
+    }
   };
 
   return (

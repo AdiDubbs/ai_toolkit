@@ -1,8 +1,11 @@
+import io
+from datetime import datetime
+
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from PIL import Image
 from caption import generate_caption
-import io
+from summarize import generate_summary
 
 app = FastAPI()
 
@@ -21,7 +24,16 @@ app.add_middleware(
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
+    """Return service metadata and a simple health indicator."""
+    return {
+        "service": "AI Toolkit Backend",
+        "status": "ok",
+        "timestamp": datetime.utcnow().isoformat(timespec="seconds") + "Z",
+        "endpoints": {
+            "caption": "/caption",
+            "summarize": "/summarize",
+        },
+    }
 
 @app.post("/caption")
 def get_caption(file: UploadFile = File(...)):
@@ -29,3 +41,9 @@ def get_caption(file: UploadFile = File(...)):
     image = Image.open(io.BytesIO(contents)).convert("RGB")
     caption = generate_caption(image)
     return {"caption": caption}
+
+@app.post("/summarize")
+def summarize_text(file: UploadFile = File(...)):
+    contents = file.file.read().decode("utf-8")
+    summary = generate_summary(contents)
+    return {"summary": summary}
